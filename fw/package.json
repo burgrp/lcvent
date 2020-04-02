@@ -5,7 +5,8 @@
 	"dependencies": {
 		"@device.farm/si-application-events": "^1.0.1",
 		"@device.farm/si-atsamd-safeboot": "^1.0.1",
-		"@device.farm/si-atsamd11c14a": "^2.0.1"
+		"@device.farm/si-atsamd11c14a": "^2.0.1",
+		"@device.farm/si-systick-timer": "^1.0.5"
 	},
 	"silicon": {
 		"sources": [
