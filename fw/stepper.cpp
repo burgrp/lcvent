@@ -1,3 +1,12 @@
+// Stepper stepper;
+// void interruptHandlerTC1() { stepper.handleTimeInterrupt(); }
+
+  // target::PM.APBCMASK.setTC(1, true);
+  // target::NVIC.ISER.setSETENA(1 << target::interrupts::External::TC1);
+  // stepper.init(&target::TC1, 2, 3, 4, 5);
+
+
+
 class Stepper {
   volatile target::tc::Peripheral *tc;
   unsigned int mask;

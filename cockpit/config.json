@@ -1,0 +1,19 @@
+{
+    "mcu": {
+        "module": "@device.farm/swdlink",
+        "elf": "fw/build/build.elf",
+        "tcl": [
+            "interface/cmsis-dap.cfg",
+            "target/at91samdXX.cfg"
+        ]
+    },
+    "webglue": {
+        "module": "@device.farm/webglue",
+        "modules": [
+            {
+                "module": "./ui.js",
+                "mcu": "-> mcu"
+            }
+        ]
+    }
+}
