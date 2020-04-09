@@ -6,6 +6,7 @@ wg.pages.home = {
         function update(registers) {
             $(".pressurePa>.value").text(pa2cmh2o(registers.pressurePa));
             $(".mode>.value").text(registers.mode.toUpperCase());
+            $(".json.registers").text(JSON.stringify(registers, null, 2))
         }
 
         container.append(
@@ -18,7 +19,8 @@ wg.pages.home = {
                 DIV("mode", [
                     DIV().text("Mode"),
                     DIV("value mode")
-                ])
+                ]),
+                DIV("json registers")
             ]).onCockpitRegistersUpdate(({ registers }) => {
                 update(registers);
             })

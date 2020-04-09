@@ -25,3 +25,9 @@ body {
     color: white;
     margin: .2em 0;
 }
+
+.json {
+    text-align: left;
+    font-family: monospace;
+    white-space: pre;    
+}

@@ -10,8 +10,9 @@ module.exports = async config => {
     }
 
     let registerConverters = {
-        mode: (raw, offset) => ["off", "test"][raw.readUInt32LE(offset)],
-        pressurePa: (raw, offset) => raw.readUInt32LE(offset)
+        mode: (raw, offset) => ["off", "test"][raw.readInt32LE(offset)],
+        pressurePa: (raw, offset) => raw.readInt32LE(offset),
+        flowMl: (raw, offset) => raw.readInt32LE(offset)
     }
 
     let registerNames = Object.keys(registerConverters);
