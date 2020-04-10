@@ -1,3 +1,5 @@
+const deepEqual = require("fast-deep-equal");
+
 module.exports = async config => {
 
     let events = {
@@ -6,39 +8,37 @@ module.exports = async config => {
         }
     }
 
-    let registers = {
-    }
+    let registers = {};
+    let previousRegisters = {};
 
     let registerConverters = {
         mode: (raw, offset) => ["off", "test"][raw.readInt32LE(offset)],
         pressurePa: (raw, offset) => raw.readInt32LE(offset),
-        flowMl: (raw, offset) => raw.readInt32LE(offset)
+        flowMl: (raw, offset) => raw.readInt32LE(offset),
+        fanPwmPerc: (raw, offset) => raw.readInt32LE(offset)
     }
 
     let registerNames = Object.keys(registerConverters);
 
-    let previousRaw;
-
     setInterval(async () => {
 
-        let raw;
-
         try {
-            raw = await config.mcu.read("registers", registerNames.length * 4, 80);
+            let raw = await config.mcu.read("registers", registerNames.length * 4, 80);
+            registerNames.forEach((name, index) => registers[name] = raw ? registerConverters[name](raw, index * 4) : undefined);            
         } catch (e) {
-            console.error("Error reading registares:", e);
+            console.error(e);
+            registers = {
+                errors: {
+                    ERROR_READING_REGISTERS: true
+                }
+            }
         }
 
-
-        if (((!raw || !previousRaw) && raw !== previousRaw) || Buffer.compare(raw, previousRaw) !== 0) {
-            previousRaw = raw;
+        if (!deepEqual(registers, previousRegisters)) {
+            previousRegisters = {...registers};
             console.info("Registers changed");
-
-            registerNames.forEach((name, index) => registers[name] = raw ? registerConverters[name](raw, index * 4) : undefined);
-
             events.cockpit.registersUpdate({ registers });
         }
-
 
     }, 500);
 
@@ -48,6 +48,9 @@ module.exports = async config => {
             cockpit: {
                 async getRegisters() {
                     return registers;
+                },
+                async setFanPwmPerc({ value }) {
+                    await config.mcu.write32("setFanPwmPerc", value);
                 }
             }
         },
